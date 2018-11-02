@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=qjp88995
+    volumes:
+      - ./volumes/mysql/data:/var/lib/mysql
+      - ./volumes/mysql/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    networks:
+      - web
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      - PMA_HOST=mysql
+    networks:
+      - web
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    labels:
+      - "traefik.backend=phpmyadmin"
+      - "traefik.frontend.rule=Host:mysql.qinjiapeng.cn"
+      - "traefik.port=80"
+      - "traefik.network=traefik_webgateway"
+      - "traefik.frontend.entryPoints=http,https"
+
+networks:
+  web:
+    external:
+      name: traefik_webgateway

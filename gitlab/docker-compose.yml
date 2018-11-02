@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: 'gitlab.qinjiapeng.cn'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.qinjiapeng.cn'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+    networks:
+      - web
+    ports:
+      - '2224:22'
+    volumes:
+      - './volumes/config:/etc/gitlab'
+      - './volumes/logs:/var/log/gitlab'
+      - './volumes/data:/var/opt/gitlab'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    labels:
+      - "traefik.backend=gitlab"
+      - "traefik.frontend.rule=Host:gitlab.qinjiapeng.cn"
+      - "traefik.port=80"
+      - "traefik.network=traefik_webgateway"
+      - "traefik.frontend.entryPoints=http,https"
+
+networks:
+  web:
+    external:
+      name: traefik_webgateway

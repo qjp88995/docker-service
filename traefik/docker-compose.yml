@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik
+    container_name: traefik
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    restart: always
+    networks:
+      - webgateway
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml
+      - ./acme.json:/acme.json
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    labels:
+      - "traefik.backend=traefik"
+      - "traefik.frontend.rule=Host:traefik.qinjiapeng.cn"
+      - "traefik.port=8080"
+      - "traefik.network=traefik_webgateway"
+      - "traefik.frontend.entryPoints=http,https"
+
+networks:
+  webgateway:
+    driver: bridge
