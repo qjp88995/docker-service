@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  ghost:
+    image: ghost
+    container_name: ghost
+    restart: always
+    environment:
+      url: https://ghost.qinjiapeng.cn
+      database__client: mysql
+      database__connection__host: mysql_native
+      database__connection__user: ghost
+      database__connection__password: qjp88995
+      database__connection__database: ghost
+      #database__connection__ssl: 'false'
+    volumes:
+      - ./volumes/ghost/content:/var/lib/ghost/content
+    networks:
+      - web
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    labels:
+      - "traefik.backend=ghost"
+      - "traefik.frontend.rule=Host:ghost.qinjiapeng.cn"
+      - "traefik.port=2368"
+      - "traefik.network=traefik_webgateway"
+      - "traefik.frontend.entryPoints=http,https"
+
+networks:
+  web:
+    external:
+      name: traefik_webgateway
