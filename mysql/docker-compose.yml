@@ -10,6 +10,8 @@ services:
     volumes:
       - ./volumes/mysql/data:/var/lib/mysql
       - ./volumes/mysql/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    ports:
+      - 3306:3306
     networks:
       web:
         aliases:

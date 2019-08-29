@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: qjp88995
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - web
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    labels:
+      - "traefik.backend=wordpress"
+      - "traefik.frontend.rule=Host:wordpress.qinjiapeng.cn"
+      - "traefik.port=80"
+      - "traefik.network=traefik_webgateway"
+      - "traefik.frontend.entryPoints=http,https"
+
+networks:
+  web:
+    external:
+      name: traefik_webgateway
