@@ -5,23 +5,11 @@ services:
     image: ghost
     container_name: ghost
     restart: always
-    environment:
-      url: https://ghost.qinjiapeng.cn
-      database__client: mysql
-      database__connection__host: mysql_native
-      database__connection__user: ghost
-      database__connection__password: qjp88995
-      database__connection__database: ghost
-      #database__connection__ssl: 'false'
+    env_file: .env
     volumes:
       - ./volumes/ghost/content:/var/lib/ghost/content
     networks:
       - web
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "10"
     labels:
       - "traefik.backend=ghost"
       - "traefik.frontend.rule=Host:ghost.qinjiapeng.cn"

@@ -5,8 +5,7 @@ services:
     image: mysql
     container_name: mysql
     restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=qjp88995
+    env_file: .env
     volumes:
       - ./volumes/mysql/data:/var/lib/mysql
       - ./volumes/mysql/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
@@ -18,24 +17,13 @@ services:
           - mysql
           - mysql_sha2
           - mysql_native
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "10"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: mysql_phpmyadmin
     restart: always
-    environment:
-      - PMA_HOST=mysql
+    env_file: .env
     networks:
       - web
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "10"
     labels:
       - "traefik.backend=phpmyadmin"
       - "traefik.frontend.rule=Host:mysql.qinjiapeng.cn"

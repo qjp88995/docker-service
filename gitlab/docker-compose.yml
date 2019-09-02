@@ -17,11 +17,6 @@ services:
       - './volumes/config:/etc/gitlab'
       - './volumes/logs:/var/log/gitlab'
       - './volumes/data:/var/opt/gitlab'
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "10"
     labels:
       - "traefik.backend=gitlab"
       - "traefik.frontend.rule=Host:gitlab.qinjiapeng.cn"
